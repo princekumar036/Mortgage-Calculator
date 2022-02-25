@@ -5,16 +5,45 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Principle: ");
-        double principle = scanner.nextDouble();
-        System.out.print("Annual Interest Rate: ");
-        double rate = scanner.nextDouble() / 1200;
-        System.out.print("Period (Years): ");
-        double period = scanner.nextDouble() * 12;
+        final byte MONTHS_IN_YEARS = 12;
+        final byte PERCENT = 100;
 
-        double mortgage = principle * (rate * Math.pow((1 + rate), period) / (Math.pow((1 + rate), period) - 1));
-        String outcome = NumberFormat.getCurrencyInstance().format(mortgage);
-        System.out.println(outcome);
+        int principle;
+        float monthlyInterest;
+        float monthlyPayment;
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("Principle: ");
+            principle = scanner.nextInt();
+            if (principle >= 1000 && principle <= 1_000_000)
+                break;
+            System.out.println("Enter a value between 1,000 and 1,000,000.");
+        }
+
+        while (true) {
+            System.out.print("Annual Interest Rate: ");
+            float annualInterest = scanner.nextFloat();
+            if (annualInterest > 1 && annualInterest <= 30) {
+                monthlyInterest = annualInterest / MONTHS_IN_YEARS / PERCENT;
+                break;
+            }
+            System.out.println("Enter a value between 1 and 30.");
+        }
+
+        while (true) {
+            System.out.print("Period (Years): ");
+            float years = scanner.nextFloat();
+            if (years > 1 && years <= 30) {
+                monthlyPayment = years * MONTHS_IN_YEARS;
+                break;
+            }
+            System.out.println("Enter a value between 1 and 30.");
+        }
+
+        double mortgage = principle * (monthlyInterest * Math.pow((1 + monthlyInterest), monthlyPayment) / (Math.pow((1 + monthlyInterest), monthlyPayment) - 1));
+        String output = NumberFormat.getCurrencyInstance().format(mortgage);
+        System.out.println("Your final mortgage is" + output);
     }
 }
